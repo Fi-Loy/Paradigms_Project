@@ -9,24 +9,66 @@ public class Resident {
 	private String firstname;
 	private String lastname;
 	private String[] rol;
-	
+	private int rolIndex = 0;
+
+	private Program matchedProgram;
+	private int matchedRank;
+
+
+
 	// constructs a Resident
     public Resident(int id, String fname, String lname) {
-	
 		residentID= id;
 		firstname= fname;
 		lastname= lname;
+		matchedProgram = null;
+		matchedRank = -1;
 	}
 
-    // the rol in order of preference
+	// getters
+	public int getResidentID() {return residentID;}
+	public String[] getRol() {return rol;}
+
+	public Program getMatchedProgram() {return matchedProgram;}
+	public int getMatchedRank() {return matchedRank;}
+
+	// setters
+	public void setMatchedProgram(Program p, int rank) {
+		matchedProgram = p;
+		matchedRank = rank;
+	}
+	// checks is resident is matched
+	public boolean isMatched() {
+		return matchedProgram != null;
+	}
+
+	public void clearMatch() {
+		matchedProgram = null;
+		matchedRank = -1;
+	}
+
+
+	// the rol in order of preference
 	public void setROL(String[] rol) {
-		
 		this.rol= rol;
 	}
-	
+
+	public boolean hasRol() {
+		return (rolIndex < rol.length);
+	}
+
+	public String nextRol() {
+		if (hasRol()) {
+			String preferred = rol[rolIndex];
+			rolIndex++;
+			return preferred;
+		}
+		return null;
+	}
+
 	// string representation
 	public String toString() {
       
-       return "["+residentID+"]: "+firstname+" "+ lastname+" ("+rol.length+")";	  
+       return "["+residentID+"]: "+firstname+" "+ lastname+" ("+rol.length+")";
 	}
 }
