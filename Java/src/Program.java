@@ -88,8 +88,10 @@ public class Program {
 	 * resident. 
 	 */
 	public void addResident(Resident resident){
+		if(quota == 0) return;
 		int rank = rank(resident.getResidentID());
 		if (rank == -1) return;
+
 
 		if (matchedResidents.size() < quota) {
 			matchedResidents.add(resident);
