@@ -33,22 +33,31 @@ public class Resident {
 	public int getMatchedRank() {return matchedRank;}
 
 	// setters
+	/** 
+	 * Sets the Program of the Resident
+	*/
 	public void setMatchedProgram(Program p, int rank) {
 		matchedProgram = p;
 		matchedRank = rank;
 	}
-	// checks is resident is matched
+	/**checks if the resident is matched
+	*/ 
 	public boolean isMatched() {
 		return matchedProgram != null;
 	}
 
+	/**
+	 * Clears the match of the Resident
+	 */
 	public void clearMatch() {
 		matchedProgram = null;
 		matchedRank = -1;
 	}
 
 
-	// the rol in order of preference
+	/**
+	 * Sets the rol in order of preference
+	 */ 
 	public void setROL(String[] rol) {
 		this.rol= rol;
 	}
@@ -66,7 +75,9 @@ public class Resident {
 		return null;
 	}
 
-	// string representation
+	/**
+	 * string representation
+	 */
 	public String toString() {
       
        return "["+residentID+"]: "+firstname+" "+ lastname+" ("+rol.length+")";

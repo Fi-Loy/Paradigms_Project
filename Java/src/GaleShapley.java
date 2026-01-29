@@ -11,8 +11,8 @@ public class GaleShapley {
 	public HashMap<String,Program> programs;
 	
 
-	public GaleShapley(String residentsFilename, String programsFilename) throws IOException, 
-													NumberFormatException {
+	public GaleShapley(String residentsFilename, String programsFilename) 
+	throws IOException, NumberFormatException {
 		
 		readResidents(residentsFilename);
 		readPrograms(programsFilename);
@@ -20,11 +20,11 @@ public class GaleShapley {
 	
 	// Reads the residents csv file
 	// It populates the residents HashMap
-    public void readResidents(String residentsFilename) throws IOException, 
-													NumberFormatException {
+    public void readResidents(String residentsFilename) 
+	throws IOException, NumberFormatException {
 
         String line;
-		residents= new HashMap<Integer,Resident>();
+		residents = new HashMap<Integer,Resident>();
 		BufferedReader br = new BufferedReader(new FileReader(residentsFilename)); 
 
 		int residentID;
