@@ -14,6 +14,11 @@ public class Program {
 
 	private ArrayList<Resident> matchedResidents = new ArrayList<>();
 
+	public String getProgramID() {return programID;}
+	public String getName() {return name;}
+	public ArrayList<Resident> getMatchedResidents() {return matchedResidents;}
+	public int getQuota() {return quota;}
+
 
 	// constructs a Program
     public Program(String id, String n, int q) {
@@ -26,13 +31,11 @@ public class Program {
 
     // the rol in order of preference
 	public void setROL(int[] rol) {
-		
 		this.rol= rol;
 	}
 	
 	// string representation
 	public String toString() {
-      
        return "["+programID+"]: "+name+" {"+ quota+ "}" +" ("+rol.length+")";	  
 	}
 
