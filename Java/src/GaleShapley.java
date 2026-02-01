@@ -245,6 +245,10 @@ public class GaleShapley {
 //			System.out.println(gs.programs);
 
 
+
+
+
+
 			
         } catch (Exception e) {
             System.err.println("Error reading the file: " + e.getMessage());
