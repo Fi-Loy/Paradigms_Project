@@ -28,7 +28,7 @@ public class Resident {
 	// getters
 	public int getResidentID() {return residentID;}
 	public String[] getRol() {return rol;}
-
+	public String getLastname() {return lastname;}
 	public Program getMatchedProgram() {return matchedProgram;}
 	public int getMatchedRank() {return matchedRank;}
 
@@ -81,5 +81,15 @@ public class Resident {
 	public String toString() {
       
        return "["+residentID+"]: "+firstname+" "+ lastname+" ("+rol.length+")";
+	}
+
+	public String matchedString() {
+		return lastname + "," + firstname + "," + residentID + "," +
+				matchedProgram.getProgramID() + "," + matchedProgram.getName();
+
+	}
+	public String unmachtedString() {
+		return lastname + "," + firstname + "," + residentID + "," +
+				"XXX,NOT_MATCHED";
 	}
 }

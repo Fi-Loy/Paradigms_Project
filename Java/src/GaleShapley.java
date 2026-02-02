@@ -2,6 +2,7 @@
 // Winter 2026
 // Robert Laganiere, uottawa.ca
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 // this is the (incomplete) class that will generate the resident and program maps
@@ -16,11 +17,65 @@ public class GaleShapley {
 		
 		readResidents(residentsFilename);
 		readPrograms(programsFilename);
+
+		while (unMatchedResidentWithOptions()) {
+			Resident current = null;
+			for (Resident r : residents.values()) {
+				if (!r.isMatched() && r.hasRol()) {
+					current = r;
+					break;
+				}
+			}
+			String programId = current.nextRol();
+			Program program = programs.get(programId);
+
+			if (program != null) {
+				program.addResident(current);
+			}
+		}
+		printResident();
+		printOpenPrograms();
+	}
+
+	public boolean unMatchedResidentWithOptions() {
+		for (Resident resident : residents.values()) {
+			if (!resident.isMatched() && resident.hasRol()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void printResident() {
+		int unmatched = 0;
+		ArrayList<Resident> sorted = new ArrayList<>(residents.values());
+		sorted.sort((x,y) -> x.getLastname().compareTo(y.getLastname()));
+
+		System.out.println("lastname,firstname,residentID,programID,name");
+		for (Resident r : sorted) {
+			if (r.isMatched()) {
+				System.out.println(r.matchedString());
+			} else {
+				unmatched++;
+				System.out.println(r.unmachtedString());
+			}
+		}
+		System.out.println();
+		System.out.println("Number of positions available: " + unmatched);
+
+	}
+
+	public void printOpenPrograms() {
+		int openPrograms = 0;
+		for (Program program : programs.values()) {
+			openPrograms += program.getQuota() - program.getMatchedResidents().size();
+		}
+		System.out.println("Number of positions available: " + openPrograms);
 	}
 	
 	// Reads the residents csv file
 	// It populates the residents HashMap
-    public void readResidents(String residentsFilename) 
+    public void readResidents(String residentsFilename)
 	throws IOException, NumberFormatException {
 
         String line;
@@ -184,9 +239,15 @@ public class GaleShapley {
 		try {
 			
 			GaleShapley gs= new GaleShapley(args[0],args[1]);
-			
-			System.out.println(gs.residents);
-			System.out.println(gs.programs);
+//			gs.printResident();
+//			System.out.println(gs.residents);
+//			System.out.println(gs.programs);
+
+
+
+
+
+
 			
         } catch (Exception e) {
             System.err.println("Error reading the file: " + e.getMessage());
