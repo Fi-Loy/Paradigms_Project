@@ -11,13 +11,13 @@ public class GaleShapley {
 	public HashMap<Integer,Resident> residents;
 	public HashMap<String,Program> programs;
 	
-
 	public GaleShapley(String residentsFilename, String programsFilename) 
 	throws IOException, NumberFormatException {
 		
 		readResidents(residentsFilename);
 		readPrograms(programsFilename);
 
+		//Matching Algorithm
 		while (unMatchedResidentWithOptions()) {
 			Resident current = null;
 			for (Resident r : residents.values()) {
@@ -149,12 +149,11 @@ public class GaleShapley {
 			residents.put(residentID,resident);
 		}	
     }
-
 	
 	// Reads the programs csv file
 	// It populates the programs HashMap
-    public void readPrograms(String programsFilename) throws IOException, 
-													NumberFormatException {
+    public void readPrograms(String programsFilename) 
+	throws IOException, NumberFormatException {
 
         String line;
 		programs= new HashMap<String,Program>();
@@ -238,17 +237,10 @@ public class GaleShapley {
 		
 		try {
 			
-			GaleShapley gs= new GaleShapley(args[0],args[1]);
+			GaleShapley gs = new GaleShapley(args[0],args[1]);
 //			gs.printResident();
 //			System.out.println(gs.residents);
 //			System.out.println(gs.programs);
-
-
-
-
-
-
-			
         } catch (Exception e) {
             System.err.println("Error reading the file: " + e.getMessage());
         }

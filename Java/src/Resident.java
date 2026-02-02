@@ -14,8 +14,6 @@ public class Resident {
 	private Program matchedProgram;
 	private int matchedRank;
 
-
-
 	// constructs a Resident
     public Resident(int id, String fname, String lname) {
 		residentID= id;
@@ -54,7 +52,6 @@ public class Resident {
 		matchedRank = -1;
 	}
 
-
 	/**
 	 * Sets the rol in order of preference
 	 */ 
@@ -62,10 +59,19 @@ public class Resident {
 		this.rol= rol;
 	}
 
+	/**
+	 * Checks if the resident has reached the end of his
+	 * ROL and if there are available programs to match to.
+	 */
 	public boolean hasRol() {
 		return (rolIndex < rol.length);
 	}
 
+	/**
+	 * Returns the next listing in the resident ROL and
+	 * increments the ROL index. Returns null if at the 
+	 * end of the ROL.
+	 */
 	public String nextRol() {
 		if (hasRol()) {
 			String preferred = rol[rolIndex];
@@ -82,7 +88,7 @@ public class Resident {
       
        return "["+residentID+"]: "+firstname+" "+ lastname+" ("+rol.length+")";
 	}
-
+	
 	public String matchedString() {
 		return lastname + "," + firstname + "," + residentID + "," +
 				matchedProgram.getProgramID() + "," + matchedProgram.getName();
