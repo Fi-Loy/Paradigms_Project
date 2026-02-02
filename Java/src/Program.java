@@ -38,7 +38,11 @@ public class Program {
 	 * @param residentId
 	 */
 	public boolean member(int residentId){
-		//TODO: Finish implementation
+		for (Resident resident : matchedResidents) {
+			if (resident.getResidentID() == residentId){
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -48,7 +52,10 @@ public class Program {
 	 * included in the ROL. 
 	 */
 	public int rank(int residentID){
-		//TODO: Finish implementation
+		for(int i = 0; i < rol.length; i++){
+			if (rol[i] == residentID)
+				return i + 1;
+		}
 		return -1;
 	}
 
@@ -56,9 +63,8 @@ public class Program {
 	 * Returns the resident with the highest rank
 	 * (lowest preference)
 	 */
-	public Resident leastPreferred(){
-		//TODO: Finish implementation
-		return null;
+	public int leastPreferred(){
+		return rol[rol.length];
 	}
 
 	/**

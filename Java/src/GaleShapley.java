@@ -181,7 +181,6 @@ public class GaleShapley {
 
 	public static void main(String[] args) {
 		
-		
 		try {
 			
 			GaleShapley gs= new GaleShapley(args[0],args[1]);
