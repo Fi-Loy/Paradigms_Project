@@ -94,7 +94,7 @@ public class Resident {
 				matchedProgram.getProgramID() + "," + matchedProgram.getName();
 
 	}
-	public String unmachtedString() {
+	public String unmatchedString() {
 		return lastname + "," + firstname + "," + residentID + "," +
 				"XXX,NOT_MATCHED";
 	}

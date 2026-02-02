@@ -57,7 +57,7 @@ public class GaleShapley {
 				System.out.println(r.matchedString());
 			} else {
 				unmatched++;
-				System.out.println(r.unmachtedString());
+				System.out.println(r.unmatchedString());
 			}
 		}
 		System.out.println();
