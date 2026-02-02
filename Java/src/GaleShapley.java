@@ -236,11 +236,8 @@ public class GaleShapley {
 	public static void main(String[] args) {
 		
 		try {
-			
 			GaleShapley gs = new GaleShapley(args[0],args[1]);
-//			gs.printResident();
-//			System.out.println(gs.residents);
-//			System.out.println(gs.programs);
+
         } catch (Exception e) {
             System.err.println("Error reading the file: " + e.getMessage());
         }
