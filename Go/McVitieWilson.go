@@ -1,12 +1,42 @@
 package main
 
 import (
+	"container/heap"
 	"encoding/csv"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
 )
+
+type Selected struct {
+	residentID int
+	rank       int
+}
+type SelectedHeap []Selected
+
+func (sh SelectedHeap) Len() int {
+	return len(sh)
+}
+func (sh SelectedHeap) Less(i, j int) bool {
+	return sh[i].rank > sh[j].rank
+}
+func (sh SelectedHeap) Swap(i, j int) {
+	sh[i], sh[j] = sh[j], sh[i]
+}
+
+func (sh *SelectedHeap) Push(x interface{}) {
+	*sh = append(*sh, x.(Selected))
+}
+
+func (sh *SelectedHeap) Pop() interface{} {
+	temp := *sh
+	n := len(temp)
+	v := temp[n-1]
+	*sh = temp[:n-1]
+	return v
+
+}
 
 // The Resident data type
 type Resident struct {
@@ -26,6 +56,102 @@ type Program struct {
 	nPositions int   // number of positions available (quota)
 	rol        []int // program rank order list
 	// TO ADD: a data structure for the selected resident IDs
+	selectedResidents SelectedHeap
+}
+
+func offer(rID int, residents map[int]*Resident, programs map[string]*Program) {
+	r := residents[rID]
+	//resident matched or no programs left
+	if r.matchedProgram != "" || r.rolIndex >= len(r.rol) {
+
+		return
+	}
+
+	pID := r.rol[r.rolIndex]
+	r.rolIndex++
+	evaluate(rID, pID, residents, programs)
+}
+func evaluate(rID int, pID string, residents map[int]*Resident, programs map[string]*Program) {
+
+	p := programs[pID]
+	r := residents[rID]
+
+	// find residents rank
+	rank := -1
+	for i, id := range p.rol {
+		if id == rID {
+			rank = i
+			break
+		}
+	}
+
+	// exit if unranked
+	if rank == -1 {
+		offer(rID, residents, programs)
+		return
+	}
+
+	//accept if positions are available
+	if p.selectedResidents.Len() < p.nPositions {
+
+		heap.Push(&p.selectedResidents, Selected{residentID: rID, rank: rank})
+		r.matchedProgram = pID
+		return
+	}
+
+	// compare to ranked resident
+	//Top of heap holds the worst resident (Less() ordering)
+	worst := p.selectedResidents[0]
+
+	// if new resident has better rank
+	if rank < worst.rank {
+
+		// remove worst (top of heap)
+		removed := heap.Pop(&p.selectedResidents).(Selected)
+
+		// removed resident resets
+		residents[removed.residentID].matchedProgram = ""
+
+		// push new resident
+		heap.Push(&p.selectedResidents, Selected{residentID: rID, rank: rank})
+		r.matchedProgram = pID
+		//removed resident proposes again
+		offer(removed.residentID, residents, programs)
+
+	} else {
+		// new resident trys next program
+		offer(rID, residents, programs)
+	}
+}
+
+func availablePositions(programs map[string]*Program) int {
+	emptyPositions := 0
+	for _, p := range programs {
+		open := p.nPositions - len(p.selectedResidents)
+		emptyPositions += open
+
+	}
+	return emptyPositions
+}
+
+func PrintMatches(residents map[int]*Resident, programs map[string]*Program) {
+	fmt.Println("lastname,firstname,residentID,programID,name")
+	unmatchedCount := 0
+
+	for _, r := range residents {
+
+		pID := r.matchedProgram
+		if pID == "" {
+			fmt.Printf("%s,%s,%d,XXX,NOT_MATCHED\n", r.lastname, r.firstname, r.residentID)
+			unmatchedCount++
+			continue
+		}
+		p := programs[pID]
+		fmt.Printf("%s,%s,%d,%s,%s\n", r.lastname, r.firstname, r.residentID, pID, p.name)
+	}
+
+	fmt.Println("Number of unmatched residents:", unmatchedCount)
+	fmt.Println("Number of positions available:", availablePositions(programs))
 }
 
 // Parse a resident's ROL
@@ -152,6 +278,7 @@ func ReadProgramsCSV(filename string) (map[string]*Program, error) {
 			nPositions: np,
 			rol:        parseIntRol(record[3]),
 		}
+		heap.Init(&programs[record[0]].selectedResidents)
 
 	}
 
@@ -162,25 +289,33 @@ func ReadProgramsCSV(filename string) (map[string]*Program, error) {
 func main() {
 
 	// read residents
-	residents, err := ReadResidentsCSV("residents4000.csv")
+	residents, err := ReadResidentsCSV("residentsLARGE.csv")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 
-	for _, p := range residents {
-		fmt.Printf("ID: %d, Name: %s %s, Rol: %v\n", p.residentID, p.firstname, p.lastname, p.rol)
-	}
+	//for _, p := range residents {
+	//	fmt.Printf("ID: %d, Name: %s %s, Rol: %v\n", p.residentID, p.firstname, p.lastname, p.rol)
+	//}
 
-	programs, err := ReadProgramsCSV("programs4000.csv")
+	programs, err := ReadProgramsCSV("programsLARGE.csv")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 
-	for _, p := range programs {
-		fmt.Printf("ID: %s, Name: %s, Number of pos: %d, Number of applicants: %d\n", p.programID, p.name, p.nPositions, len(p.rol))
+	//everything commented below is not needed for desired output
+
+	//for _, p := range programs {
+	//	fmt.Printf("ID: %s, Name: %s, Number of pos: %d, Number of applicants: %d\n", p.programID, p.name, p.nPositions, len(p.rol))
+	//}
+	//
+	//fmt.Printf("\nNMD: %v", programs["NMD"])
+
+	for id := range residents {
+		offer(id, residents, programs)
 	}
 
-	fmt.Printf("\nNMD: %v", programs["NMD"])
+	PrintMatches(residents, programs)
 }
