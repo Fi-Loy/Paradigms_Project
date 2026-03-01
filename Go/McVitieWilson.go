@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type Selected struct {
@@ -285,6 +286,14 @@ func ReadProgramsCSV(filename string) (map[string]*Program, error) {
 	return programs, nil
 }
 
+func McVitieWilson(residents map[int]*Resident, programs map[string]*Program) {
+	for id := range residents {
+		offer(id, residents, programs)
+	}
+
+	PrintMatches(residents, programs)
+}
+
 // Example usage
 func main() {
 
@@ -312,10 +321,9 @@ func main() {
 	//}
 	//
 	//fmt.Printf("\nNMD: %v", programs["NMD"])
+	start := time.Now()
+	McVitieWilson(residents, programs)
+	end := time.Now()
 
-	for id := range residents {
-		offer(id, residents, programs)
-	}
-
-	PrintMatches(residents, programs)
+	fmt.Println("Execution time:", end.Sub(start))
 }
