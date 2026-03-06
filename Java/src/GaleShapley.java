@@ -61,7 +61,7 @@ public class GaleShapley {
 			}
 		}
 		System.out.println();
-		System.out.println("Number of positions available: " + unmatched);
+		System.out.println("Number of unmatched residents: " + unmatched);
 
 	}
 
