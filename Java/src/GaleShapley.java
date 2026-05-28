@@ -45,7 +45,7 @@ public class GaleShapley {
 		}
 		return false;
 	}
-
+	
 	public void printResident() {
 		int unmatched = 0;
 		ArrayList<Resident> sorted = new ArrayList<>(residents.values());
